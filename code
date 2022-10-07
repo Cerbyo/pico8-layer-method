@@ -1,22 +1,24 @@
-function _init() draw_objects={}
-	player={cx=64,cy=64,r=6,draw=function(self)circfill(self.cx,self.cy,self.r,8)line(self.cx-self.r,self.cy+1+self.r,self.cx+self.r,self.cy+1+self.r,1) end};
-		add(draw_objects,player)
+function _init()
+	srand()
+	draw_objects={}
+	player=entity(64,64,6,8)
+	add(draw_objects,player)
 
 	for i=0,50 do 
-		local bush={cx=rnd(128),cy=rnd(128),r=rnd(8)+2,c=(rnd()<.5) and 3 or 11,
-		draw=function(self)circfill(self.cx,self.cy,self.r,self.c)line(self.cx-self.r,self.cy+1+self.r,self.cx+self.r,self.cy+1+self.r,1) end}
+		bush=entity(rnd(128),rnd(128),rnd(8)+2,(rnd()<.5) and 3 or 11)
 		add(draw_objects,bush) end
 
 	--[[method init]] 	sorted={};max_rad=9 --max radius value
 end
 
 function _draw()cls()
---[[method]]for i=0-max_rad,127+max_rad do sorted[i]={} end
-	for obj in all(draw_objects)do
-		add(sorted[flr(obj.cy)], obj)
+--[[method]] local sorted,i,k,obj={} for i=0,127+max_rad*2 do sorted[i]={} end
+	for obj in all(draw_objects) do
+		local index=flr(obj.cy+obj.r)
+		add(sorted[index],obj)
 	end
 
-	for k=0-max_rad,127+max_rad do
+	for k=0,127+max_rad*2 do
 		for obj in all(sorted[k]) do obj:draw() end 
 	end
 --Problem: iterates fine from [0,127+max_rad]; how to iterate from [0-max_rad,127+max_rad] to fix cutoff at top of screen?
@@ -26,7 +28,20 @@ function _draw()cls()
 --add(sorted[-1],{y=3})
 --for obj in all(sorted[-1]) do	?obj.y -- 2;3 
 --end
+	?stat(1),1,1,7
 end
 
 function _update() if btn(0) then player.cx-=2 end if btn(1) then player.cx+=2 end if btn(2) then player.cy-=2 end if btn(3) then player.cy+=2 end end
 
+function entity(cx,cy,r,c)
+	return {
+		cx=cx,
+		cy=cy,
+		r=r,
+		c=c,
+		draw=function(self)
+			circfill(self.cx,self.cy,self.r,self.c)
+			line(self.cx-self.r,self.cy+1+self.r,self.cx+self.r,self.cy+1+self.r,1)
+		end,
+	}
+end
