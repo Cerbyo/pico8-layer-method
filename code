@@ -19,6 +19,7 @@ function _draw()cls()
 	for k=0,127+max_rad do
 		for obj in all(sorted[k]) do obj:draw() end 
 	end
+--Problem: iterates fine from [0,127+max_rad]; how to iterate from [0-max_rad,127+max_rad] to fix cutoff at top of screen?
 end
 
 function _update() if btn(0) then player.cx-=2 end if btn(1) then player.cx+=2 end if btn(2) then player.cy-=2 end if btn(3) then player.cy+=2 end end
