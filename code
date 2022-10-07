@@ -1,0 +1,25 @@
+function _init() draw_objects={}
+	player={cx=64,cy=64,r=6,draw=function(self)circfill(self.cx,self.cy,self.r,8)line(self.cx-self.r,self.cy+1+self.r,self.cx+self.r,self.cy+1+self.r,1) end};
+		add(draw_objects,player)
+
+	for i=0,50 do 
+		local bush={cx=rnd(128),cy=rnd(128),r=rnd(8)+2,c=(rnd()<.5) and 3 or 11,
+		draw=function(self)circfill(self.cx,self.cy,self.r,self.c)line(self.cx-self.r,self.cy+1+self.r,self.cx+self.r,self.cy+1+self.r,1) end}
+		add(draw_objects,bush) end
+
+	--[[method init]] 	sorted={};max_rad=9 --max radius value
+end
+
+function _draw()cls()
+--[[method]]for i=0,127+max_rad do sorted[i]={} end
+	for obj in all(draw_objects)do
+		add(sorted[flr(obj.cy)], obj)
+	end
+
+	for k=0,127+max_rad do
+		for obj in all(sorted[k]) do obj:draw() end 
+	end
+end
+
+function _update() if btn(0) then player.cx-=2 end if btn(1) then player.cx+=2 end if btn(2) then player.cy-=2 end if btn(3) then player.cy+=2 end end
+
